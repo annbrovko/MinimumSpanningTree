@@ -1,4 +1,3 @@
-public class HeapNode {
-    int vertex;
-    int key;
+class HeapNode {
+    int vertex, key;
 }

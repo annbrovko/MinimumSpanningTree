@@ -1,5 +1,4 @@
 public class ResultSet {
-    int parent;
-    int weight;
+    int parent, weight;
 }
 
