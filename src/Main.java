@@ -2,9 +2,10 @@
 public class Main {
 
     public static void main(String[] args) {
-        int V = 16;
 
-        Graph g = new Graph(V);
+        int v = 16;
+
+        Graph g = new Graph(v);
 
         g.addEdge(0, 7, 28);
         g.addEdge(0, 11, 13);

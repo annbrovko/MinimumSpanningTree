@@ -1,3 +1,4 @@
+import java.text.NumberFormat;
 import java.util.LinkedList;
 
 class Graph {
@@ -6,103 +7,140 @@ class Graph {
     // list of adjacent nodes of a given vertex
     LinkedList<Edge>[] adjacencyList;
 
-        // constructor for the graph object
-        Graph(int v){
-            // number og vertices
-            this.v = v;
-            // initialize a new LinkedList with v positions
-            adjacencyList = new LinkedList[v];
-            // for every vertex create a new LinkedList
-            for(int i = 0; i < v; i++){
-                adjacencyList[i] = new LinkedList<>();
-            }
+    // constructor for the graph object
+    Graph(int v) {
+        // number og vertices
+        this.v = v;
+        // initialize a new LinkedList with v positions
+        adjacencyList = new LinkedList[v];
+        // for every vertex create a new LinkedList
+        for (int i = 0; i < v; i++) {
+            adjacencyList[i] = new LinkedList<>();
+        }
+    }
+
+    // add edge to the adj list
+    public void addEdge(int src, int dest, int weight) {
+        Edge edge = new Edge(src, dest, weight);
+        adjacencyList[src].addFirst(edge);
+        // for undirected graph, so it goes both ways
+        edge = new Edge(dest, src, weight);
+        adjacencyList[dest].addFirst(edge);
+    }
+
+    //
+    public void getMST() {
+        // create an inHeap array of type boolean of size v
+        boolean[] inHeap = new boolean[v];
+        // create a resultSet array of size v
+        ResultSet[] resultSet = new ResultSet[v];
+        // create a key array of type int of size v
+        int[] key = new int[v];
+        // create a heapNodes array of size v
+        HeapNode[] heapNodes = new HeapNode[v];
+
+        // for every index in the array of size v
+        for (int i = 0; i < v; i++) {
+            // fill array heapNodes with HeapNodes, where
+            // vertex is index, and key is infinite
+            heapNodes[i] = new HeapNode();
+            heapNodes[i].vertex = i;
+            heapNodes[i].key = Integer.MAX_VALUE;
+            // fill array resultSet, where parent is -1
+            resultSet[i] = new ResultSet();
+            resultSet[i].parent = -1;
+            // ????? indicate that the node is inside the heap
+            inHeap[i] = true;
+            // ?????
+            key[i] = Integer.MAX_VALUE;
         }
 
-        // add edge to the adj list
-        public void addEdge(int src, int dest, int weight){
-            Edge edge = new Edge(src, dest, weight);
-            adjacencyList[src].addFirst(edge);
-            // for undirected graph, so it goes both ways
-            edge = new Edge(dest, src, weight);
-            adjacencyList[dest].addFirst(edge);
+        // the starting node's key is set to 0, it doesn't have a source
+        heapNodes[0].key = 0;
+
+        // add all the vertices to the minHeap
+        // init minHeap with the size of number of towns
+        MinHeap minHeap = new MinHeap(v);
+        // add all the vertices to priority queue
+        for (int i = 0; i < v; i++) {
+            minHeap.insert(heapNodes[i]);
         }
 
-        public void getMST(){
-            boolean[] inHeap = new boolean[v];
-            ResultSet[] resultSet = new ResultSet[v];
-            int[] key = new int[v];
-            HeapNode[] heapNodes = new HeapNode[v];
+        // while minHeap is not empty
+        while (!minHeap.isEmpty()) {
+            HeapNode extractedNode = minHeap.extractMin();
 
-            for(int i = 0; i < v; i++){
-                heapNodes[i] = new HeapNode();
-                heapNodes[i].vertex = i;
-                heapNodes[i].key = Integer.MAX_VALUE;
-                resultSet[i] = new ResultSet();
-                resultSet[i].parent = -1;
-                inHeap[i] = true;
-                key[i] = Integer.MAX_VALUE;
-            }
+            // extracted vertex
+            int extractedVertex = extractedNode.vertex;
+            inHeap[extractedVertex] = false;
 
-            // the starting node's key is set to 0, it doesn't have a source
-            heapNodes[0].key = 0;
+            // iterate through all the adj vertices
+            LinkedList<Edge> list = adjacencyList[extractedVertex];
+            for (int i = 0; i < list.size(); i++) {
+                Edge edge = list.get(i);
+                // only if edge destination is present in heap
+                if (inHeap[edge.dest]) {
+                    int dest = edge.dest;
+                    int newKey = edge.weight;
 
-            // add all the vertices to the minHeap
-            // init minHeap with the size of number of towns
-            MinHeap minHeap = new MinHeap(v);
-            // add all the vertices to priority queue
-            for (int i = 0; i < v; i ++){
-                minHeap.insert(heapNodes[i]);
-            }
-
-            // while minHeap is not empty
-            while (!minHeap.isEmpty()){
-                HeapNode extractedNode = minHeap.extractMin();
-
-                // extracted vertex
-                int extractedVertex = extractedNode.vertex;
-                inHeap[extractedVertex] = false;
-
-                // iterate through all the adj vertices
-                LinkedList<Edge> list = adjacencyList[extractedVertex];
-                for (int i = 0; i < list.size(); i++){
-                    Edge edge = list.get(i);
-                    // only if edge destination is present in heap
-                    if(inHeap[edge.dest]){
-                        int dest  = edge.dest;
-                        int newKey = edge.weight;
-
-                        if (key[dest]>newKey){
-                            decreaseKey(minHeap, newKey, dest);
-                            // update the parent node for destination
-                            resultSet[dest].parent = extractedVertex;
-                            resultSet[dest].weight = newKey;
-                            key[dest] = newKey;
-                        }
+                    // check if the ?????
+                    if (key[dest] > newKey) {
+                        decreaseKey(minHeap, newKey, dest);
+                        // update the parent node for destination
+                        resultSet[dest].parent = extractedVertex;
+                        resultSet[dest].weight = newKey;
+                        key[dest] = newKey;
                     }
                 }
             }
-
-            // print MST
-            printMST(resultSet);
         }
 
-        public void decreaseKey(MinHeap minHeap, int newKey, int vertex){
-            // get the index which key's needs a decrease
-            int index = minHeap.indexes[vertex];
+        // print Minimum Spanning Tree
+        printMST(resultSet);
+    }
 
-            // get the node and update its value
-            HeapNode node = minHeap.minH[index];
-            node.key = newKey;
-            minHeap.moveUp(index);
-        }
+    public void decreaseKey(MinHeap minHeap, int newKey, int vertex) {
+        // get the index which key's needs a decrease
+        int index = minHeap.indexes[vertex];
 
-        public void printMST(ResultSet[] resultSet){
-            int total_min_weight = 0;
-            System.out.println("Minimum Spanning Tree: ");
-            for (int i = 1; i < v; i++){
-                System.out.println("Edge: " + i + " - " + resultSet[i].parent + " km: " + resultSet[i].weight);
-                total_min_weight += resultSet[i].weight;
-            }
-            System.out.println("Total minimum km: " + total_min_weight);
+        // get the node and update its value
+        HeapNode node = minHeap.minH[index];
+        node.key = newKey;
+        minHeap.moveUp(index);
+    }
+
+    public void printMST(ResultSet[] resultSet) {
+        int total_min_weight = 0;
+        // create a new array to exchange the values of type int with names of the towns
+        String[] towns = new String[16];
+        towns[0] = "Eskildstrup";
+        towns[1] = "Haslev";
+        towns[2] = "Holbæk";
+        towns[3] = "Jægerspris";
+        towns[4] = "Kalundborg";
+        towns[5] = "Korsør";
+        towns[6] = "Køge";
+        towns[7] = "Maribo";
+        towns[8] = "Næstved";
+        towns[9] = "Ringsted";
+        towns[10] = "Slagelse";
+        towns[11] = "Nykøbing F";
+        towns[12] = "Vordingborg";
+        towns[13] = "Sorø";
+        towns[14] = "Roskilde";
+        towns[15] = "Nakskov";
+
+        System.out.println("Minimum Spanning Tree: ");
+        // print every edge of minimum spanning tree and calculate the total distance
+        for (int i = 1; i < v; i++) {
+            System.out.println("Edge: " + towns[i] + " - " + towns[resultSet[i].parent] + " km: " + resultSet[i].weight);
+            total_min_weight += resultSet[i].weight;
         }
+        System.out.println("Total minimum km: " + total_min_weight);
+        // 100 DKK per 1m
+        int total_price = total_min_weight * 100 * 1000;
+        // set format of the number
+        NumberFormat myFormat = NumberFormat.getInstance();
+        System.out.println("The total price is: " + myFormat.format(total_price) + " DKK");
+    }
 }

@@ -1,24 +1,17 @@
 class MinHeap {
     int capacity, currentSize;
     HeapNode[] minH;
-    int [] indexes;
+    int[] indexes;
 
     // constructor
-    public MinHeap (int capacity){
+    public MinHeap(int capacity) {
         this.capacity = capacity;
         minH = new HeapNode[capacity + 1];
-        indexes  = new int[capacity];
+        indexes = new int[capacity];
         minH[0] = new HeapNode();
         minH[0].key = Integer.MIN_VALUE;
-        minH[0].vertex =-1;
+        minH[0].vertex = -1;
         currentSize = 0;
-    }
-
-    public void show(){
-        for(int i = 0; i <= currentSize; i++){
-            System.out.println(" " + minH[i].vertex + " key " + minH[i].key);
-        }
-        System.out.println("____________");
     }
 
     // insert a new HeapNode (with vertex and key) into the minHeap tree
@@ -31,10 +24,10 @@ class MinHeap {
     }
 
     // if the current index is less than parent index, switch places with parent index
-    public void moveUp(int position){
-        int parentIndex = position/2;
+    public void moveUp(int position) {
+        int parentIndex = position / 2;
         int currentIndex = position;
-        while(currentIndex > 0 && minH[parentIndex].key > minH[currentIndex].key){
+        while (currentIndex > 0 && minH[parentIndex].key > minH[currentIndex].key) {
             HeapNode currentNode = minH[currentIndex];
             HeapNode parentNode = minH[parentIndex];
 
@@ -43,11 +36,11 @@ class MinHeap {
             indexes[parentNode.vertex] = currentIndex;
             swap(currentIndex, parentIndex);
             currentIndex = parentIndex;
-            parentIndex = parentIndex/2;
+            parentIndex = parentIndex / 2;
         }
     }
 
-    public HeapNode extractMin(){
+    public HeapNode extractMin() {
         HeapNode min = minH[1];
         HeapNode lastNode = minH[currentSize];
 
@@ -64,22 +57,22 @@ class MinHeap {
         return currentSize == 0;
     }
 
-    public int heapSize(){
+    public int heapSize() {
         return currentSize;
     }
 
-    public void moveDown(int k){
+    public void moveDown(int k) {
         int smallest = k;
         int leftChildIndex = 2 * k;
         int rightChildIndex = 2 * k + 1;
-        if (leftChildIndex < heapSize() && minH[smallest].key > minH[leftChildIndex].key){
+        if (leftChildIndex < heapSize() && minH[smallest].key > minH[leftChildIndex].key) {
             smallest = leftChildIndex;
         }
-        if (rightChildIndex < heapSize() && minH[smallest].key > minH[rightChildIndex].key){
+        if (rightChildIndex < heapSize() && minH[smallest].key > minH[rightChildIndex].key) {
             smallest = rightChildIndex;
         }
 
-        if (smallest != k){
+        if (smallest != k) {
 
             HeapNode smallestNode = minH[smallest];
             HeapNode kNode = minH[k];
@@ -93,7 +86,7 @@ class MinHeap {
     }
 
     // method for swapping the positions of the nodes
-    public void swap (int a, int b){
+    public void swap(int a, int b) {
         HeapNode temp = minH[a];
         minH[a] = minH[b];
         minH[b] = temp;

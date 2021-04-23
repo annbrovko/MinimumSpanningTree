@@ -1,4 +1,4 @@
-public class ResultSet {
+class ResultSet {
     int parent, weight;
 }
 
