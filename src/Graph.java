@@ -2,18 +2,18 @@ import java.util.LinkedList;
 
 class Graph {
     // num of vertices (towns) in the graph
-    int V;
+    int v;
     // list of adjacent nodes of a given vertex
     LinkedList<Edge>[] adjacencyList;
 
         // constructor for the graph object
-        Graph(int V){
+        Graph(int v){
             // number og vertices
-            this.V = V;
-            // initialize a new LinkedList with V positions
-            adjacencyList = new LinkedList[V];
+            this.v = v;
+            // initialize a new LinkedList with v positions
+            adjacencyList = new LinkedList[v];
             // for every vertex create a new LinkedList
-            for(int i = 0; i < V; i++){
+            for(int i = 0; i < v; i++){
                 adjacencyList[i] = new LinkedList<>();
             }
         }
@@ -23,17 +23,17 @@ class Graph {
             Edge edge = new Edge(src, dest, weight);
             adjacencyList[src].addFirst(edge);
             // for undirected graph, so it goes both ways
-            edge = new Edge(src, dest, weight);
+            edge = new Edge(dest, src, weight);
             adjacencyList[dest].addFirst(edge);
         }
 
         public void getMST(){
-            boolean[] inHeap = new boolean[V];
-            ResultSet[] resultSet = new ResultSet[V];
-            int[] key = new int[V];
-            HeapNode[] heapNodes = new HeapNode[V];
+            boolean[] inHeap = new boolean[v];
+            ResultSet[] resultSet = new ResultSet[v];
+            int[] key = new int[v];
+            HeapNode[] heapNodes = new HeapNode[v];
 
-            for(int i = 0; i < V; i++){
+            for(int i = 0; i < v; i++){
                 heapNodes[i] = new HeapNode();
                 heapNodes[i].vertex = i;
                 heapNodes[i].key = Integer.MAX_VALUE;
@@ -48,9 +48,9 @@ class Graph {
 
             // add all the vertices to the minHeap
             // init minHeap with the size of number of towns
-            MinHeap minHeap = new MinHeap(V);
+            MinHeap minHeap = new MinHeap(v);
             // add all the vertices to priority queue
-            for (int i = 0; i < V; i ++){
+            for (int i = 0; i < v; i ++){
                 minHeap.insert(heapNodes[i]);
             }
 
@@ -99,7 +99,7 @@ class Graph {
         public void printMST(ResultSet[] resultSet){
             int total_min_weight = 0;
             System.out.println("Minimum Spanning Tree: ");
-            for (int i = 1; i < V; i++){
+            for (int i = 1; i < v; i++){
                 System.out.println("Edge: " + i + " - " + resultSet[i].parent + " km: " + resultSet[i].weight);
                 total_min_weight += resultSet[i].weight;
             }
