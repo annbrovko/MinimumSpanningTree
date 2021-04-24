@@ -16,7 +16,9 @@ class MinHeap {
 
     // insert a new HeapNode (with vertex and key) into the minHeap tree
     public void insert(HeapNode x) {
+        // increase the size of the MST with every HeapNode
         currentSize++;
+        // set the index of the node to be equal to the current size of the MST
         int index = currentSize;
         minH[index] = x;
         indexes[x.vertex] = index;
@@ -40,6 +42,7 @@ class MinHeap {
         }
     }
 
+    // move the last node to the top, where it can be placed
     public HeapNode extractMin() {
         HeapNode min = minH[1];
         HeapNode lastNode = minH[currentSize];

@@ -112,7 +112,7 @@ class Graph {
     public void printMST(ResultSet[] resultSet) {
         int total_min_weight = 0;
         // create a new array to exchange the values of type int with names of the towns
-        String[] towns = new String[16];
+        String[] towns = new String[v];
         towns[0] = "Eskildstrup";
         towns[1] = "Haslev";
         towns[2] = "Holbæk";
