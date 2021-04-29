@@ -30,13 +30,13 @@ class Graph {
 
     //
     public void getMST() {
-        // create an inHeap array of type boolean of size v
+        // init an inHeap array of type boolean of size v
         boolean[] inHeap = new boolean[v];
-        // create a resultSet array of size v
+        // init a resultSet array of size v
         ResultSet[] resultSet = new ResultSet[v];
-        // create a key array of type int of size v
+        // init a key array of type int of size v
         int[] key = new int[v];
-        // create a heapNodes array of size v
+        // init a heapNodes array of size v
         HeapNode[] heapNodes = new HeapNode[v];
 
         // for every index in the array of size v
